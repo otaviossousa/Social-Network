@@ -171,7 +171,6 @@ int main() {
  * Para cada par de usuários, decida aleatoriamente se eles estão conectados.
  */
 
-
 /* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
  * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
  * Implementação do BFS:
