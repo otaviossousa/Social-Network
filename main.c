@@ -22,7 +22,7 @@ typedef struct User {
 // Estrutura para representar um nó na lista de adjacência
 typedef struct AdjacencyNode {
     struct User* user;  // Ponteiro para o usuário conectado
-    struct AdjacencyNode* proximo;  // Ponteiro para o próximo nó adjacente
+    struct AdjacencyNode* next;  // Ponteiro para o próximo nó adjacente
 } AdjacencyNode;
 
 // Estrutura para representar o grafo
@@ -38,7 +38,7 @@ AdjacencyNode* createNode(User* user) {
     AdjacencyNode* newNode = (AdjacencyNode*) malloc(sizeof(AdjacencyNode));
     if (!newNode) exit(1);  // Verificação de alocação de memória
     newNode->user = user;
-    newNode->proximo = NULL;
+    newNode->next = NULL;
     return newNode;
 }
 
@@ -76,12 +76,12 @@ Graph* createGraph(int numUsers, char* names[]) {
 void addConnection(Graph* graph, int src, int dest) {
     // Adiciona uma conexão de src para dest
     AdjacencyNode* newNode = createNode(graph->users[dest]);
-    newNode->proximo = graph->adjList[src];
+    newNode->next = graph->adjList[src];
     graph->adjList[src] = newNode;
 
     // Como o grafo é não direcionado, adiciona também a conexão de dest para src
     newNode = createNode(graph->users[src]);
-    newNode->proximo = graph->adjList[dest];
+    newNode->next = graph->adjList[dest];
     graph->adjList[dest] = newNode;
 }
 
@@ -93,7 +93,7 @@ void printGraph(Graph* graph) {
         printf("%s (%d): ", graph->users[i]->nome, graph->users[i]->id);
         while (temp) {
             printf("%s ", temp->user->nome);
-            temp = temp->proximo;
+            temp = temp->next;
         }
         printf("\n");
     }
@@ -106,7 +106,7 @@ void freeGraph(Graph* graph) {
         AdjacencyNode* temp = graph->adjList[i];
         while (temp) {
             AdjacencyNode* toDelete = temp;
-            temp = temp->proximo;
+            temp = temp->next;
             free(toDelete);
         }
     }
