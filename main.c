@@ -23,7 +23,6 @@ typedef struct User {
 typedef struct AdjacencyNode {
     struct User* user;  // Ponteiro para o usuário conectado
     struct AdjacencyNode* proximo;  // Ponteiro para o próximo nó adjacente
-    int cor;  // Atributo extra para armazenar uma cor, caso necessário para algoritmos de grafos
 } AdjacencyNode;
 
 // Estrutura para representar o grafo
