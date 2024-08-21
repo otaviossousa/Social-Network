@@ -57,10 +57,7 @@ AdjacencyNode* createNode(User* user) {
 // names: Array de nomes dos usuários
 Graph* createGraph(int numUsers, char* names[]) {
     Graph* graph = (Graph*)malloc(sizeof(Graph));
-    if (!graph) {
-        perror("Erro na alocação de memória");
-        exit(EXIT_FAILURE);
-    }
+    if (!graph) exit(1);  // Verificação de alocação de memória
     graph->numUsers = numUsers;
 
     graph->users = (User**)malloc(numUsers * sizeof(User*));
