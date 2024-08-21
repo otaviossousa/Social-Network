@@ -15,31 +15,31 @@
  * índice contém os IDs dos usuários conectados.
 */
 
+// Estrutura para representar um usuário
+typedef struct User {
+    int id;
+    char nome[MAX_NAME_LENGTH];
+} User;
+
 // Estrutura para representar um nó na lista de adjacência
-struct AdjacencyNode {
-    int id;                // ID do nó adjacente
-    struct AdjacencyNode *next;  // Ponteiro para o próximo nó na lista
-};
+typedef struct AdjacencyNode {
+    struct User* user;  // Ponteiro para o usuário conectado
+    struct AdjacencyNode* next;  // Ponteiro para o próximo nó adjacente
+} AdjacencyNode;
 
 // Estrutura para representar o grafo
-struct Graph {
-    int numUsers;               // Número de usuários (nós)
-    char** names;               // Array de nomes dos usuários
-    struct AdjacencyNode** adjList;  // Array de listas de adjacências
-};
-
-struct Queue {
-    int items[MAX_QUEUE_SIZE];
-    int front;
-    int rear;
-};
+typedef struct Graph {
+    User** users;  // Array de ponteiros para os usuários
+    AdjacencyNode** adjList;  // Array de listas de adjacências
+    int numUsers;  // Número de usuários (nós)
+} Graph;
 
 // Função para criar um novo nó na lista de adjacências
 // id: ID do nó adjacente
-struct AdjacencyNode *createNode(int id) {
-    struct AdjacencyNode *newNode = (struct AdjacencyNode *) malloc(sizeof(struct AdjacencyNode));
-    if (!newNode) exit(1); // Verificação de alocação de memória
-    newNode->id = id;
+AdjacencyNode* createNode(User* user) {
+    AdjacencyNode* newNode = (AdjacencyNode*) malloc(sizeof(AdjacencyNode));
+    if (!newNode) exit(1);  // Verificação de alocação de memória
+    newNode->user = user;
     newNode->next = NULL;
     return newNode;
 }
@@ -47,20 +47,21 @@ struct AdjacencyNode *createNode(int id) {
 // Função para criar um grafo com um número fixo de usuários
 // numUsers: Número total de usuários (nós)
 // names: Array de nomes dos usuários
-struct Graph* createGraph(int numUsers, char* names[]) {
-    struct Graph* graph = (struct Graph*) malloc(sizeof(struct Graph));
-    if (!graph) exit(1); // Verificação de alocação de memória
+Graph* createGraph(int numUsers, char* names[]) {
+    Graph* graph = (Graph*) malloc(sizeof(Graph));
+    if (!graph) exit(1);  // Verificação de alocação de memória
     graph->numUsers = numUsers;
 
-    // Alocar e copiar os nomes dos usuários
-    graph->names = (char**) malloc(numUsers * sizeof(char*));
+    // Alocar e inicializar os usuários
+    graph->users = (User**) malloc(numUsers * sizeof(User*));
     for (int i = 0; i < numUsers; i++) {
-        graph->names[i] = (char*) malloc(MAX_NAME_LENGTH * sizeof(char));
-        strncpy(graph->names[i], names[i], MAX_NAME_LENGTH);
+        graph->users[i] = (User*) malloc(sizeof(User));
+        graph->users[i]->id = i;
+        strncpy(graph->users[i]->nome, names[i], MAX_NAME_LENGTH);
     }
 
     // Alocar a lista de adjacências
-    graph->adjList = (struct AdjacencyNode**) malloc(numUsers * sizeof(struct AdjacencyNode*));
+    graph->adjList = (AdjacencyNode**) malloc(numUsers * sizeof(AdjacencyNode*));
 
     // Inicializa a lista de adjacências para cada usuário como NULL
     for (int i = 0; i < numUsers; i++) {
@@ -70,17 +71,18 @@ struct Graph* createGraph(int numUsers, char* names[]) {
 }
 
 // Função para adicionar uma conexão (aresta) entre dois usuários
+// Função para adicionar uma conexão (aresta) entre dois usuários
 // graph: Ponteiro para o grafo
 // src: ID do usuário de origem
 // dest: ID do usuário de destino
-void addConnection(struct Graph* graph, int src, int dest) {
+void addConnection(Graph* graph, int src, int dest) {
     // Adiciona uma conexão de src para dest
-    struct AdjacencyNode* newNode = createNode(dest);
+    AdjacencyNode* newNode = createNode(graph->users[dest]);
     newNode->next = graph->adjList[src];
     graph->adjList[src] = newNode;
 
     // Como o grafo é não direcionado, adiciona também a conexão de dest para src
-    newNode = createNode(src);
+    newNode = createNode(graph->users[src]);
     newNode->next = graph->adjList[dest];
     graph->adjList[dest] = newNode;
 }
@@ -96,10 +98,10 @@ void addConnection(struct Graph* graph, int src, int dest) {
 // src: ID do usuário de origem
 // dest: ID do usuário de destino
 // Retorna true se a conexão já existir, caso contrário, retorna false
-bool connectionExists(struct Graph* graph, int src, int dest) {
-    struct AdjacencyNode* temp = graph->adjList[src];
+bool connectionExists(Graph* graph, int src, int dest) {
+    AdjacencyNode* temp = graph->adjList[src];
     while (temp) {
-        if (temp->id == dest) {
+        if (temp->user->id == dest) {
             return true;  // A conexão já existe
         }
         temp = temp->next;
@@ -110,7 +112,7 @@ bool connectionExists(struct Graph* graph, int src, int dest) {
 // Função para gerar conexões aleatórias entre os usuários
 // graph: Ponteiro para o grafo
 // numConnections: Número desejado de conexões a serem adicionadas
-void generateRandomConnections(struct Graph* graph, int numConnections) {
+void generateRandomConnections(Graph* graph, int numConnections) {
     // Verifica se o número solicitado de conexões excede o número máximo possível
     if (numConnections > graph->numUsers * (graph->numUsers - 1) / 2) {
         printf("Número de conexões solicitado é maior do que o máximo possível.\n");
@@ -135,12 +137,13 @@ void generateRandomConnections(struct Graph* graph, int numConnections) {
 }
 
 // Função para contar o número total de conexões (arestas) no grafo
-int countConnections(struct Graph* graph) {
+// graph: Ponteiro para o grafo
+int countConnections(Graph* graph) {
     int count = 0;  // Inicializa o contador de conexões
 
     // Itera sobre todos os usuários no grafo
     for (int i = 0; i < graph->numUsers; i++) {
-        struct AdjacencyNode* temp = graph->adjList[i];  // Pega a lista de adjacências para o usuário i
+        AdjacencyNode* temp = graph->adjList[i];  // Pega a lista de adjacências para o usuário i
 
         // Itera sobre todos os nós adjacentes ao usuário i
         while (temp) {
@@ -157,12 +160,13 @@ int countConnections(struct Graph* graph) {
 /* --------------------------------------------------------------------------------------------------------*/
 
 // Função para imprimir o grafo
-void printGraph(struct Graph* graph) {
+// graph: Ponteiro para o grafo
+void printGraph(Graph* graph) {
     for (int i = 0; i < graph->numUsers; i++) {
-        struct AdjacencyNode* temp = graph->adjList[i];
-        printf("%s (%d): ", graph->names[i], i);
+        AdjacencyNode* temp = graph->adjList[i];
+        printf("%s (%d): ", graph->users[i]->nome, graph->users[i]->id);
         while (temp) {
-            printf("%s ", graph->names[temp->id]);
+            printf("%s ", temp->user->nome);
             temp = temp->next;
         }
         printf("\n");
@@ -170,25 +174,28 @@ void printGraph(struct Graph* graph) {
 }
 
 // Função para liberar a memória alocada para o grafo
-void freeGraph(struct Graph* graph) {
+// graph: Ponteiro para o grafo
+void freeGraph(Graph* graph) {
     for (int i = 0; i < graph->numUsers; i++) {
-        struct AdjacencyNode *temp = graph->adjList[i];
+        AdjacencyNode* temp = graph->adjList[i];
         while (temp) {
-            struct AdjacencyNode *toDelete = temp;
+            AdjacencyNode* toDelete = temp;
             temp = temp->next;
             free(toDelete);
         }
     }
     free(graph->adjList);
+
+    // Libera a memória alocada para os usuários
     for (int i = 0; i < graph->numUsers; i++) {
-        free(graph->names[i]);
+        free(graph->users[i]);
     }
-    free(graph->names);
+    free(graph->users);
+
     free(graph);
 }
 
 int main() {
-    int numUsers = 20;
     char* names[] = {
         "Andrew", "Carlos", "Damaira", "David", "Evaldo",
         "Helena", "Hyan", "Jefte", "Jonatan", "Jose",
@@ -196,8 +203,9 @@ int main() {
         "Sabrina", "Samuel", "Terto", "Thalyson", "Thiago"
     };
 
-    // Cria o grafo
-    struct Graph* graph = createGraph(numUsers, names);
+    // numUsers = 160 / 8 = 20
+    int numUsers = sizeof(names) / sizeof(names[0]);
+    Graph* graph = createGraph(numUsers, names);
 
     // Gerar conexões aleatórias
     generateRandomConnections(graph, 20);
@@ -213,7 +221,6 @@ int main() {
     freeGraph(graph);
     return 0;
 }
-
 
 /* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
  * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
