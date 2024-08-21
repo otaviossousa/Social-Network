@@ -321,8 +321,6 @@ void sorteiaUsuariosECalculaMenorCaminho(struct Graph* graph) {
 
 // Função para imprimir o grafo
 // graph: Ponteiro para o grafo
-// Função para imprimir o grafo
-// graph: Ponteiro para o grafo
 void printGraph(Graph* graph) {
     for (int i = 0; i < graph->numUsers; i++) {
         printf("%s (%d): ", graph->users[i]->nome, graph->users[i]->id);
