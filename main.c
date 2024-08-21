@@ -5,7 +5,7 @@
 #define MAX_QUEUE_SIZE 100
 #define MAX_NAME_LENGTH 10
 
-/* 1: Estrutura de Dados para o Grafo
+/* 1-etapa: Estrutura de Dados para o Grafo
  * Objetivo: Criar a estrutura de dados que representará a rede social (grafo).
  * Lista de adjacências para representar as conexões entre os usuários.
  * Cada usuário será representado por um ID único (número).
@@ -109,7 +109,7 @@ void freeGraph(struct Graph* graph) {
 }
 
 int main() {
-    int numUsers = 20; // Atualizado para 20
+    int numUsers = 20;
     char* names[] = {
         "Andrew", "Carlos", "Damaira", "David", "Evaldo",
         "Helena", "Hyan", "Jefte", "Jonatan", "Jose",
@@ -151,14 +151,14 @@ int main() {
     return 0;
 }
 
-/* 2: Gerar Conexões Aleatórias
+/* 2-etapa: Gerar Conexões Aleatórias
  * Objetivo: Adicionar conexões aleatórias entre os usuários para simular uma rede social.
  * Gerar conexões aleatórias:
  * Para cada par de usuários, decida aleatoriamente se eles estão conectados.
  */
 
 
-/* 3: Implementação do BFS para Encontrar o Menor Caminho
+/* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
  * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
  * Implementação do BFS:
  * Usaremos uma fila para explorar os nós (usuários) camada por camada.
@@ -170,7 +170,7 @@ int main() {
  */
 
 
-/* 4: Imprimir Conexões Mais Próximas e Mais Distantes
+/* 4-etapa: Imprimir Conexões Mais Próximas e Mais Distantes
  * Objetivo: Imprimir a conexão mais próxima e a mais distante entre dois usuários.
  * Implementação:
  * Use o resultado da busca BFS para identificar a conexão mais próxima e mais distante.
