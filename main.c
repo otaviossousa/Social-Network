@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <time.h>
 
 #define MAX_QUEUE_SIZE 100
 #define MAX_NAME_LENGTH 10
@@ -15,8 +17,8 @@
 
 // Estrutura para representar um nó na lista de adjacência
 struct AdjacencyNode {
-    int id;
-    struct AdjacencyNode *next;
+    int id;                // ID do nó adjacente
+    struct AdjacencyNode *next;  // Ponteiro para o próximo nó na lista
 };
 
 // Estrutura para representar o grafo
@@ -33,6 +35,7 @@ struct Queue {
 };
 
 // Função para criar um novo nó na lista de adjacências
+// id: ID do nó adjacente
 struct AdjacencyNode *createNode(int id) {
     struct AdjacencyNode *newNode = (struct AdjacencyNode *) malloc(sizeof(struct AdjacencyNode));
     if (!newNode) exit(1); // Verificação de alocação de memória
@@ -42,6 +45,8 @@ struct AdjacencyNode *createNode(int id) {
 }
 
 // Função para criar um grafo com um número fixo de usuários
+// numUsers: Número total de usuários (nós)
+// names: Array de nomes dos usuários
 struct Graph* createGraph(int numUsers, char* names[]) {
     struct Graph* graph = (struct Graph*) malloc(sizeof(struct Graph));
     if (!graph) exit(1); // Verificação de alocação de memória
@@ -65,6 +70,9 @@ struct Graph* createGraph(int numUsers, char* names[]) {
 }
 
 // Função para adicionar uma conexão (aresta) entre dois usuários
+// graph: Ponteiro para o grafo
+// src: ID do usuário de origem
+// dest: ID do usuário de destino
 void addConnection(struct Graph* graph, int src, int dest) {
     // Adiciona uma conexão de src para dest
     struct AdjacencyNode* newNode = createNode(dest);
@@ -76,6 +84,77 @@ void addConnection(struct Graph* graph, int src, int dest) {
     newNode->next = graph->adjList[dest];
     graph->adjList[dest] = newNode;
 }
+
+/* 2-etapa: Gerar Conexões Aleatórias
+ * Objetivo: Adicionar conexões aleatórias entre os usuários para simular uma rede social.
+ * Gerar conexões aleatórias:
+ * Para cada par de usuários, decida aleatoriamente se eles estão conectados.
+ */
+
+// Função para verificar se uma conexão entre dois usuários já existe
+// graph: Ponteiro para o grafo
+// src: ID do usuário de origem
+// dest: ID do usuário de destino
+// Retorna true se a conexão já existir, caso contrário, retorna false
+bool connectionExists(struct Graph* graph, int src, int dest) {
+    struct AdjacencyNode* temp = graph->adjList[src];
+    while (temp) {
+        if (temp->id == dest) {
+            return true;  // A conexão já existe
+        }
+        temp = temp->next;
+    }
+    return false;  // A conexão não existe
+}
+
+// Função para gerar conexões aleatórias entre os usuários
+// graph: Ponteiro para o grafo
+// numConnections: Número desejado de conexões a serem adicionadas
+void generateRandomConnections(struct Graph* graph, int numConnections) {
+    // Verifica se o número solicitado de conexões excede o número máximo possível
+    if (numConnections > graph->numUsers * (graph->numUsers - 1) / 2) {
+        printf("Número de conexões solicitado é maior do que o máximo possível.\n");
+        return;  // Se o número solicitado for maior, exibe uma mensagem de erro e retorna
+    }
+
+    srand(time(0));  // Inicializa o gerador de números aleatórios com a semente baseada no tempo atual
+
+    int connectionsAdded = 0;  // Contador para acompanhar o número de conexões adicionadas
+
+    // Continua tentando adicionar conexões até que o número desejado de conexões seja alcançado
+    while (connectionsAdded < numConnections) {
+        int src = rand() % graph->numUsers;  // Seleciona aleatoriamente um usuário de origem
+        int dest = rand() % graph->numUsers;  // Seleciona aleatoriamente um usuário de destino
+
+        // Verifica se a conexão não é uma auto-conexão e se a conexão ainda não existe
+        if (src != dest && !connectionExists(graph, src, dest)) {
+            addConnection(graph, src, dest);  // Adiciona a conexão ao grafo
+            connectionsAdded++;  // Incrementa o contador de conexões adicionadas
+        }
+    }
+}
+
+// Função para contar o número total de conexões (arestas) no grafo
+int countConnections(struct Graph* graph) {
+    int count = 0;  // Inicializa o contador de conexões
+
+    // Itera sobre todos os usuários no grafo
+    for (int i = 0; i < graph->numUsers; i++) {
+        struct AdjacencyNode* temp = graph->adjList[i];  // Pega a lista de adjacências para o usuário i
+
+        // Itera sobre todos os nós adjacentes ao usuário i
+        while (temp) {
+            count++;  // Incrementa o contador de conexões para cada nó adjacente
+            temp = temp->next;  // Move para o próximo nó na lista de adjacências
+        }
+    }
+
+    // Como cada conexão é contada duas vezes (uma para cada direção em um grafo não direcionado),
+    // dividimos o total de contagens por 2 para obter o número real de conexões
+    return count / 2;
+}
+
+/* --------------------------------------------------------------------------------------------------------*/
 
 // Função para imprimir o grafo
 void printGraph(struct Graph* graph) {
@@ -120,42 +199,20 @@ int main() {
     // Cria o grafo
     struct Graph* graph = createGraph(numUsers, names);
 
-    // Adiciona conexões
-    addConnection(graph, 0, 1);  // Andrew <-> Carlos
-    addConnection(graph, 0, 2);  // Andrew <-> Damaira
-    addConnection(graph, 1, 3);  // Carlos <-> David
-    addConnection(graph, 2, 4);  // Damaira <-> Evaldo
-    addConnection(graph, 3, 5);  // David <-> Helena
-    addConnection(graph, 4, 6);  // Evaldo <-> Hyan
-    addConnection(graph, 5, 7);  // Helena <-> Jefte
-    addConnection(graph, 6, 8);  // Hyan <-> Jonatan
-    addConnection(graph, 7, 9);  // Jefte <-> Jose
-    addConnection(graph, 8, 10); // Jonatan <-> Luana
-    addConnection(graph, 9, 11); // Jose <-> Oresto
-    addConnection(graph, 10, 12);// Luana <-> Otavio
-    addConnection(graph, 11, 13);// Oresto <-> Patrine
-    addConnection(graph, 12, 14);// Otavio <-> Paulo
-    addConnection(graph, 13, 15);// Patrine <-> Sabrina
-    addConnection(graph, 14, 16);// Paulo <-> Samuel
-    addConnection(graph, 15, 17);// Sabrina <-> Terto
-    addConnection(graph, 16, 18);// Samuel <-> Thalyson
-    addConnection(graph, 17, 19);// Terto <-> Thiago
-    addConnection(graph, 18, 19);// Thalyson <-> Thiago
+    // Gerar conexões aleatórias
+    generateRandomConnections(graph, 20);
 
-    // Imprime o grafo para verificar se as conexões estão corretas
-    printf("Grafo apos adicao de conexoes:\n");
+    // Imprime o grafo
     printGraph(graph);
+
+    // Contar e verificar o número de conexões
+    int connectionCount = countConnections(graph);
+    printf("\nNumero total de conexoes no grafo: %d\n", connectionCount);
 
     // Libera a memória alocada para o grafo
     freeGraph(graph);
     return 0;
 }
-
-/* 2-etapa: Gerar Conexões Aleatórias
- * Objetivo: Adicionar conexões aleatórias entre os usuários para simular uma rede social.
- * Gerar conexões aleatórias:
- * Para cada par de usuários, decida aleatoriamente se eles estão conectados.
- */
 
 
 /* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
