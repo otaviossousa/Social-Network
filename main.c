@@ -157,6 +157,18 @@ int countConnections(Graph* graph) {
     return count / 2;
 }
 
+/* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
+ * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
+ * Implementação do BFS:
+ * Usaremos uma fila para explorar os nós (usuários) camada por camada.
+
+ * Crie um array para rastrear se um usuário foi visitado e um array para armazenar as distâncias a partir do nó de origem.
+ * Funcionalidade:
+ * A função deve receber dois IDs de usuários e imprimir o caminho mais curto entre eles.
+ * Caso não haja conexão, informar ao usuário.
+ */
+
+
 /* --------------------------------------------------------------------------------------------------------*/
 
 // Função para imprimir o grafo
@@ -222,16 +234,6 @@ int main() {
     return 0;
 }
 
-/* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
- * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
- * Implementação do BFS:
- * Usaremos uma fila para explorar os nós (usuários) camada por camada.
-
- * Crie um array para rastrear se um usuário foi visitado e um array para armazenar as distâncias a partir do nó de origem.
- * Funcionalidade:
- * A função deve receber dois IDs de usuários e imprimir o caminho mais curto entre eles.
- * Caso não haja conexão, informar ao usuário.
- */
 
 
 /* 4-etapa: Imprimir Conexões Mais Próximas e Mais Distantes
