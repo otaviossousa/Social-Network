@@ -1,4 +1,4 @@
-<h1>Navegação em Redes Sociais </h1>
+<h1>Navegação em Redes Sociais  </h1>
 
 <h2>Contexto</h2>
 <p>Em uma rede social, como Facebook ou LinkedIn, os usuários estão conectados por amizades ou conexões profissionais.</p>
