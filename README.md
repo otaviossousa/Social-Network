@@ -21,10 +21,10 @@
 <p>
   O código principal do projeto, totalmente desenvolvido, está disponível na branch <code>main</code>, no arquivo <code>main.c</code>. Além disso, o repositório possui outras branches que detalham o processo de desenvolvimento do código e suas funcionalidades. As branches são:
   <ul>
-    <li><code>1-etapa</code>: Estrutura de Dados para o Grafo: Define a estrutura do grafo com nós representando usuários e arestas para suas conexões, utilizando listas de adjacências e identificadores únicos.</li>
-    <li><code>2-etapa</code>: Gerar Conexões Aleatórias: Conecta usuários aleatoriamente para simular interações, garantindo a ausência de auto-conexões e duplicação de arestas.</li>
-    <li><code>3-etapa</code>: Implementar a Busca em Largura (BFS) para encontrar o menor caminho: Utiliza BFS para encontrar e exibir o menor caminho entre dois usuários, mantendo rastros de predecessores e distâncias.</li>
-    <li><code>4-etapa</code>: Encontrar o Menor e o Maior Caminho entre Usuários: Implementa DFS para descobrir o caminho mais longo e calcula o menor e o maior caminho entre dois usuários sorteados aleatoriamente.</li>
+    <li><code>1-etapa</code>: Define a estrutura do grafo com nós representando usuários e arestas para suas conexões, utilizando listas de adjacências e identificadores únicos.</li>
+    <li><code>2-etapa</code>: Conecta usuários aleatoriamente para simular interações, garantindo a ausência de auto-conexões e duplicação de arestas.</li>
+    <li><code>3-etapa</code>: Utiliza BFS para encontrar e exibir o menor caminho entre dois usuários, mantendo rastros de predecessores e distâncias.</li>
+    <li><code>4-etapa</code>: Implementa DFS para descobrir o caminho mais longo.</li>
   </ul>
 </p>
 
