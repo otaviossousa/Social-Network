@@ -33,6 +33,9 @@
   O resultado da execução do algoritmo BFS foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Abaixo está o trecho de código DOT que representa a saída gerada, que foi salva como <code>graphviz.png</code>.
 </p>
 
+<h3>Imagem da Saída no Console</h3>
+<img src="console.png" alt="Saída no Console">
+
 <h3>Código DOT</h3>
 <pre><code>
 graph SocialNetwork {
