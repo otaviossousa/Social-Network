@@ -16,3 +16,14 @@
   <li>É preciso tratar casos em que não há conexão;</li>
   <li>Imprimir a conexão mais próxima e mais distante entre dois usuários;</li>
 </ul>
+
+<h2>Descrição do Repositório</h2>
+<p>
+  O código principal do projeto, totalmente desenvolvido, está disponível na branch <code>main</code>, no arquivo <code>main.c</code>. Além disso, o repositório possui outras branches que detalham o processo de desenvolvimento do código e suas funcionalidades. As branches são:
+  <ul>
+    <li><code>1-etapa</code>: Contém a implementação inicial, que estabelece a estrutura básica do grafo e as funções essenciais.</li>
+    <li><code>2-etapa</code>: Inclui a implementação do algoritmo BFS para encontrar o menor caminho entre dois usuários.</li>
+    <li><code>3-etapa</code>: Adiciona funcionalidades para gerar conexões aleatórias e tratar casos em que não há conexão entre os usuários.</li>
+    <li><code>4-etapa</code>: Finaliza o projeto com a impressão das conexões mais próximas e mais distantes entre os usuários.</li>
+  </ul>
+</p>
