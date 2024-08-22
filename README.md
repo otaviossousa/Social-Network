@@ -30,7 +30,7 @@
 
 <h2>Resultado da Execução</h2>
 <p>
-  O resultado da execução do algoritmo BFS foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Abaixo está o trecho de código DOT que representa a saída gerada, que foi salva como <code>graph.png</code>.
+  O resultado da execução do algoritmo BFS foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Abaixo está o trecho de código DOT que representa a saída gerada, que foi salva como <code>graphviz.png</code>.
 </p>
 
 <h3>Código DOT</h3>
@@ -105,4 +105,4 @@ graph SocialNetwork {
 </code></pre>
 
 <h3>Imagem da Representação do Grafo</h3>
-<img src="graph.png" alt="Representação do Grafo">
+<img src="graphviz.png" alt="Representação do Grafo">
