@@ -7,23 +7,36 @@
 #define MAX_QUEUE_SIZE 100
 #define MAX_NAME_LENGTH 10
 
-/* 1-etapa: Estrutura de Dados para o Grafo
- * Objetivo: Criar a estrutura de dados que representará a rede social (grafo).
- * Lista de adjacências para representar as conexões entre os usuários.
- * Cada usuário será representado por um ID único (número).
- * A lista de adjacências é um array de listas, onde cada índice do array representa um usuário e a lista em cada
- * índice contém os IDs dos usuários conectados.
+/*
+1-tapa: Estrutura de Dados para o Grafo
+
+Descrição:
+- A rede social é representada por um grafo, onde cada usuário é um nó.
+- As conexões entre os usuários são representadas por arestas.
+- Utiliza-se uma lista de adjacências para representar as conexões entre os usuários.
+- Cada usuário é identificado por um ID único e um nome.
+
+Estruturas:
+- `User`: Representa um usuário com um ID único e um nome.
+- `AdjacencyNode`: Representa um nó na lista de adjacência que aponta para um usuário conectado.
+- `Graph`: Representa o grafo, contendo um array de usuários e um array de listas de adjacência.
+- `Queue`: Representa uma fila usada para algoritmos de busca.
+
+Funções:
+- `createNode`: Cria um novo nó na lista de adjacências.
+- `createGraph`: Cria um grafo com um número fixo de usuários.
+- `addConnection`: Adiciona uma conexão entre dois usuários no grafo.
 */
 
 // Estrutura para representar um usuário
 typedef struct User {
-    int id;
-    char nome[MAX_NAME_LENGTH];
+    int id;  // ID único do usuário
+    char nome[MAX_NAME_LENGTH];  // Nome do usuário
 } User;
 
 // Estrutura para representar um nó na lista de adjacência
 typedef struct AdjacencyNode {
-    struct User* user;  // Ponteiro para o usuário conectado
+    User* user;  // Ponteiro para o usuário conectado
     struct AdjacencyNode* next;  // Ponteiro para o próximo nó adjacente
 } AdjacencyNode;
 
@@ -37,13 +50,13 @@ typedef struct Graph {
 
 // Estrutura para representar uma fila
 typedef struct Queue {
-    int items[MAX_QUEUE_SIZE];
-    int front;
-    int rear;
+    int items[MAX_QUEUE_SIZE];  // Array de itens da fila
+    int front;  // Índice do primeiro item
+    int rear;  // Índice do último item
 } Queue;
 
 // Função para criar um novo nó na lista de adjacências
-// id: ID do nó adjacente
+// user: Ponteiro para o usuário que será adicionado ao nó
 AdjacencyNode* createNode(User* user) {
     AdjacencyNode* newNode = (AdjacencyNode*) malloc(sizeof(AdjacencyNode));
     if (!newNode) exit(1);  // Verificação de alocação de memória
@@ -57,10 +70,7 @@ AdjacencyNode* createNode(User* user) {
 // names: Array de nomes dos usuários
 Graph* createGraph(int numUsers, char* names[]) {
     Graph* graph = (Graph*)malloc(sizeof(Graph));
-    if (!graph) {
-        perror("Erro na alocação de memória");
-        exit(EXIT_FAILURE);
-    }
+    if (!graph) exit(1);  // Verificação de alocação de memória
     graph->numUsers = numUsers;
 
     graph->users = (User**)malloc(numUsers * sizeof(User*));
@@ -82,7 +92,6 @@ Graph* createGraph(int numUsers, char* names[]) {
 }
 
 // Função para adicionar uma conexão (aresta) entre dois usuários
-// Função para adicionar uma conexão (aresta) entre dois usuários
 // graph: Ponteiro para o grafo
 // src: ID do usuário de origem
 // dest: ID do usuário de destino
@@ -98,11 +107,19 @@ void addConnection(Graph* graph, int src, int dest) {
     graph->adjList[dest] = newNode;
 }
 
-/* 2-etapa: Gerar Conexões Aleatórias
- * Objetivo: Adicionar conexões aleatórias entre os usuários para simular uma rede social.
- * Gerar conexões aleatórias:
- * Para cada par de usuários, decida aleatoriamente se eles estão conectados.
- */
+/*
+2-etapa: Gerar Conexões Aleatórias
+
+Descrição:
+- Conectar aleatoriamente os usuários para simular as interações em uma rede social.
+- Cada conexão entre dois usuários é representada por uma aresta no grafo.
+- A geração das conexões será feita de forma aleatória, respeitando as restrições de não haver auto-conexões e não duplicar conexões.
+
+Funções:
+- `connectionExists`: Verifica se uma conexão entre dois usuários já existe.
+- `generateRandomConnections`: Gera e adiciona conexões aleatórias entre os usuários no grafo.
+- `countConnections`: Conta o número total de conexões (arestas) presentes no grafo.
+*/
 
 // Função para verificar se uma conexão entre dois usuários já existe
 // graph: Ponteiro para o grafo
@@ -126,7 +143,7 @@ bool connectionExists(Graph* graph, int src, int dest) {
 void generateRandomConnections(Graph* graph, int numConnections) {
     // Verifica se o número solicitado de conexões excede o número máximo possível
     if (numConnections > graph->numUsers * (graph->numUsers - 1) / 2) {
-        printf("Número de conexões solicitado é maior do que o máximo possível.\n");
+        printf("Numero de conexoes solicitado e maior do que o maximo possivel.\n");
         return;  // Se o número solicitado for maior, exibe uma mensagem de erro e retorna
     }
 
@@ -168,16 +185,24 @@ int countConnections(Graph* graph) {
     return count / 2;
 }
 
-/* 3-etapa: Implementação do BFS para Encontrar o Menor Caminho
- * Objetivo: Implementar o algoritmo de Busca em Largura (BFS) para encontrar o menor caminho entre dois usuários.
- * Implementação do BFS:
- * Usaremos uma fila para explorar os nós (usuários) camada por camada.
+/*
+3-tapa: Implementar a Busca em Largura (BFS) para encontrar o menor caminho
 
- * Crie um array para rastrear se um usuário foi visitado e um array para armazenar as distâncias a partir do nó de origem.
- * Funcionalidade:
- * A função deve receber dois IDs de usuários e imprimir o caminho mais curto entre eles.
- * Caso não haja conexão, informar ao usuário.
- */
+Descrição:
+- A função `bfsFindShortestPath` utiliza a BFS para explorar o grafo, partindo de um usuário inicial (startVertex) e procurando o caminho mais curto até o usuário final (finalVertex).
+- Durante o processo, a BFS mantém rastros de predecessores e distâncias para reconstruir o caminho ao encontrar o destino.
+- O uso de uma fila (queue) é essencial para gerenciar a exploração em camadas de proximidade.
+
+Funções de Suporte:
+- `createQueue`: Inicializa e retorna uma nova fila.
+- `isEmpty`: Verifica se a fila está vazia.
+- `enqueue`: Adiciona um elemento na fila.
+- `dequeue`: Remove e retorna um elemento da fila.
+- `freeQueue`: Libera a memória alocada para a fila.
+
+Função Principal:
+- `bfsFindShortestPath`: Executa a BFS para encontrar e exibir o menor caminho entre dois usuários.
+*/
 
 // Função para inicializar a fila
 Queue* createQueue() {
@@ -234,7 +259,11 @@ void freeQueue(Queue* queue) {
     }
 }
 
-void bfsMenorCaminho(struct Graph* graph, int startVertex, int finalVertex) {
+// Função para encontrar o menor caminho entre dois usuários usando BFS
+// graph: Ponteiro para o grafo
+// startVertex: ID do usuário de origem
+// finalVertex: ID do usuário de destino
+void bfsFindShortestPath(Graph* graph, int startVertex, int finalVertex) {
     Queue* q = createQueue();
     int* predecessor = malloc(graph->numUsers * sizeof(int));  // Array para armazenar predecessores
     int* distance = malloc(graph->numUsers * sizeof(int));    // Array para armazenar as distâncias
@@ -253,7 +282,7 @@ void bfsMenorCaminho(struct Graph* graph, int startVertex, int finalVertex) {
 
     while (!isEmpty(q)) {
         int currentVertex = dequeue(q);
-        struct AdjacencyNode* temp = graph->adjList[currentVertex];
+        AdjacencyNode* temp = graph->adjList[currentVertex];
 
         while (temp != NULL) {
             int adjVertex = temp->user->id;
@@ -302,22 +331,155 @@ void bfsMenorCaminho(struct Graph* graph, int startVertex, int finalVertex) {
     freeQueue(q);
 }
 
-void sorteiaUsuariosECalculaMenorCaminho(struct Graph* graph) {
-    srand(time(NULL));
+/*
+4ª Etapa: Encontrar o Menor e o Maior Caminho entre Usuários
 
-    int startVertex = rand() % graph->numUsers;
-    int finalVertex;
-    do {
-        finalVertex = rand() % graph->numUsers;
-    } while (finalVertex == startVertex);
+Descrição:
+- Implementação de funções que utilizam DFS (Busca em Profundidade) para encontrar o maior caminho possível  entre dois usuários sorteados aleatoriamente.
+- As funções fornecem a capacidade de explorar o grafo para encontrar caminhos e avaliar a conectividade entre usuários.
 
-    printf("\nUsuario: %s\n", graph->users[startVertex]->nome);
-    printf("Usuario: %s\n", graph->users[finalVertex]->nome);
+Funções:
 
-    bfsMenorCaminho(graph, startVertex, finalVertex);
+1. `dfsFindLongestPath`
+   - Objetivo: Encontrar o caminho mais longo possível no grafo a partir de um vértice inicial.
+   - Parâmetros:
+     - `graph`: Ponteiro para o grafo.
+     - `currentVertex`: Vértice atual sendo explorado.
+     - `visited`: Array para marcar os vértices já visitados.
+     - `currentPath`: Array que armazena o caminho atual.
+     - `pathIndex`: Índice atual do caminho.
+     - `maxPathLength`: Comprimento máximo do caminho encontrado até agora.
+     - `endVertex`: Vértice final do caminho mais longo encontrado.
+     - `bestPath`: Array que armazena o melhor caminho (o mais longo) encontrado.
+   - Descrição: Explora todos os vértices adjacentes, atualiza o caminho mais longo encontrado e permite a reconstrução do caminho mais longo possível.
+
+2. `findLongestPath`
+   - Objetivo: Encontrar e imprimir o caminho mais longo
+   - Descrição: Itera sobre todos os vértices do grafo, utilizando a função `dfsFindLongestPath` para encontrar o caminho mais longo a partir de cada vértice. Imprime o caminho mais longo encontrado, se existir.
+
+3. `findPathsBetweenUsers`
+   - Objetivo: Sorteia dois usuários e calcula o menor e o maior caminho entre eles.
+   - Descrição: Sorteia dois usuários diferentes, calcula o menor caminho usando BFS e o maior caminho possível no grafo usando DFS. Imprime os resultados.
+
+*/
+
+// Função auxiliar para DFS que encontra o caminho mais longo
+void dfsFindLongestPath(struct Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* endVertex, int* bestPath) {
+    visited[currentVertex] = 1;  // Marca o vértice atual como visitado
+    currentPath[pathIndex] = currentVertex;  // Adiciona o vértice ao caminho atual
+    pathIndex++;
+
+    AdjacencyNode* temp = graph->adjList[currentVertex];
+    int hasNeighbor = 0;
+
+    // Explora todos os vértices adjacentes
+    while (temp != NULL) {
+        int adjVertex = temp->user->id;
+        if (!visited[adjVertex]) {
+            hasNeighbor = 1;
+            dfsFindLongestPath(graph, adjVertex, visited, currentPath, pathIndex, maxPathLength, endVertex, bestPath);
+        }
+        temp = temp->next;
+    }
+
+    // Se não houver mais vizinhos para explorar
+    if (!hasNeighbor) {
+        // Se o caminho atual for o mais longo encontrado, atualiza o melhor caminho
+        if (pathIndex > *maxPathLength) {
+            *maxPathLength = pathIndex;
+            *endVertex = currentVertex;
+            for (int i = 0; i < pathIndex; i++) {
+                bestPath[i] = currentPath[i];
+            }
+        }
+    }
+
+    pathIndex--;
+    visited[currentVertex] = 0;  // Desmarca o vértice atual para futuras explorações
 }
 
-/* --------------------------------------------------------------------------------------------------------*/
+// Função para encontrar e imprimir o caminho mais longo usando DFS
+void findLongestPath(struct Graph* graph) {
+    int* visited = malloc(graph->numUsers * sizeof(int));      // Array de visitados
+    int* currentPath = malloc(graph->numUsers * sizeof(int));  // Array para o caminho atual
+    int* bestPath = malloc(graph->numUsers * sizeof(int));     // Array para armazenar o melhor caminho
+    int maxPathLength = 0;                                     // Comprimento máximo do caminho encontrado
+    int endVertex = -1;                                        // Vértice final do caminho mais longo
+
+    // Inicializa o array de visitados
+    for (int i = 0; i < graph->numUsers; i++) {
+        visited[i] = 0;
+    }
+
+    // Chama DFS para encontrar o caminho mais longo a partir de cada vértice
+    for (int i = 0; i < graph->numUsers; i++) {
+        if (!visited[i]) {
+            dfsFindLongestPath(graph, i, visited, currentPath, 0, &maxPathLength, &endVertex, bestPath);
+        }
+    }
+
+    // Imprime o caminho mais longo encontrado, se existir
+    if (endVertex != -1) {
+        printf("\nCaminho mais longo :\n");
+        for (int i = 0; i < maxPathLength; i++) {
+            printf("%s", graph->users[bestPath[i]]->nome);
+            if (i < maxPathLength - 1) {
+                printf(" -> ");
+            }
+        }
+        printf("\nDistancia: %d\n", maxPathLength - 1);
+    } else {
+        printf("\nNao ha caminhos no grafo.\n");
+    }
+
+    // Libera a memória alocada
+    free(visited);
+    free(currentPath);
+    free(bestPath);
+}
+
+// Função que sorteia dois usuários e calcula o menor e o maior caminho entre eles
+void findPathsBetweenUsers(Graph* graph) {
+    srand(time(NULL));  // Inicializa a semente para números aleatórios
+
+    int startVertex = rand() % graph->numUsers;  // Sorteia o vértice inicial
+    int finalVertex;
+    do {
+        finalVertex = rand() % graph->numUsers;  // Sorteia o vértice final diferente do inicial
+    } while (finalVertex == startVertex);
+
+    printf("\nUsuario inicial: %s\n", graph->users[startVertex]->nome);
+    printf("Usuario final: %s\n", graph->users[finalVertex]->nome);
+
+    // Calcula e imprime o menor caminho entre os usuários sorteados
+    bfsFindShortestPath(graph, startVertex, finalVertex);
+
+    // Calcula e imprime o maior caminho encontrado no grafo
+    findLongestPath(graph);
+}
+
+/*
+Funcoes Auxiliares:
+
+1. `printGraph`
+    - Objetivo:
+      - Imprimir a representação do grafo na tela.
+    - Descrição:
+      - Esta função itera sobre todos os vértices do grafo e imprime o nome e o ID de cada usuário.
+        Para cada usuário, a função também imprime as conexões (arestas) com outros usuários.
+        Se um usuário não tiver conexões, a função imprime "(nenhuma conexão)".
+        A função usa uma flag (`firstConnection`) para adicionar vírgulas entre as conexões, exceto antes da primeira conexão.
+
+2. `freeGraph`
+    - Objetivo:
+      - Liberar toda a memória alocada para o grafo.
+    - Descrição:
+      - Esta função percorre a lista de adjacências de cada usuário e libera a memória associada a essas listas.
+        Depois, libera a memória da lista de adjacências e dos próprios usuários.
+        Por fim, a função libera a memória alocada para a estrutura do grafo em si.
+        A função é importante para evitar vazamentos de memória ao desalocar todos os recursos utilizados pelo grafo.
+*/
+
 
 // Função para imprimir o grafo
 // graph: Ponteiro para o grafo
@@ -343,7 +505,6 @@ void printGraph(Graph* graph) {
         printf("\n");
     }
 }
-
 
 // Função para liberar a memória alocada para o grafo
 // graph: Ponteiro para o grafo
@@ -390,18 +551,9 @@ int main() {
     printf("\nNumero total de conexoes no grafo: %d\n", connectionCount);
 
     // Chama a busca
-    sorteiaUsuariosECalculaMenorCaminho(graph);
+    findPathsBetweenUsers(graph);
 
     // Libera a memória alocada para o grafo
     freeGraph(graph);
     return 0;
 }
-
-
-
-/* 4-etapa: Imprimir Conexões Mais Próximas e Mais Distantes
- * Objetivo: Imprimir a conexão mais próxima e a mais distante entre dois usuários.
- * Implementação:
- * Use o resultado da busca BFS para identificar a conexão mais próxima e mais distante.
- * Adicione funcionalidades para encontrar essas conexões e imprimi-las.
- */
