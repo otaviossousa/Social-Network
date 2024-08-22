@@ -27,3 +27,82 @@
     <li><code>4-etapa</code>: Finaliza o projeto com a impressão das conexões mais próximas e mais distantes entre os usuários.</li>
   </ul>
 </p>
+
+<h2>Resultado da Execução</h2>
+<p>
+  O resultado da execução do algoritmo BFS foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Abaixo está o trecho de código DOT que representa a saída gerada, que foi salva como <code>graph.png</code>.
+</p>
+
+<h3>Código DOT</h3>
+<pre><code>
+graph SocialNetwork {
+    // Definindo os nós e suas conexões
+    "Andrew" -- "Sabrina";
+    "Carlos" -- "Jose";
+    "Carlos" -- "Sabrina";
+    "Damaira" -- "Patrine";
+    "Damaira" -- "Sabrina";
+    "Damaira" -- "David";
+    "David" -- "Terto";
+    "David" -- "Jefte";
+    "David" -- "Damaira";
+    "Evaldo" [style=dashed, color=gray]; // Nenhuma conexão
+    "Helena" -- "Jefte";
+    "Hyan" -- "Luana";
+    "Hyan" -- "Otavio";
+    "Jefte" -- "Helena";
+    "Jefte" -- "David";
+    "Jonatan" -- "Thiago";
+    "Jose" -- "Carlos";
+    "Jose" -- "Patrine";
+    "Luana" -- "Patrine";
+    "Luana" -- "Hyan";
+    "Oresto" -- "Otavio";
+    "Oresto" -- "Samuel";
+    "Otavio" -- "Oresto";
+    "Otavio" -- "Hyan";
+    "Patrine" -- "Damaira";
+    "Patrine" -- "Luana";
+    "Patrine" -- "Jose";
+    "Patrine" -- "Thiago";
+    "Paulo" [style=dashed, color=gray]; // Nenhuma conexão
+    "Sabrina" -- "Damaira";
+    "Sabrina" -- "Andrew";
+    "Sabrina" -- "Carlos";
+    "Samuel" -- "Terto";
+    "Samuel" -- "Oresto";
+    "Terto" -- "Thalyson";
+    "Terto" -- "David";
+    "Terto" -- "Samuel";
+    "Terto" -- "Thiago";
+    "Thalyson" -- "Terto";
+    "Thiago" -- "Jonatan";
+    "Thiago" -- "Terto";
+    "Thiago" -- "Patrine";
+
+    // Estilo para destacar o caminho mais curto
+    edge [color=red, penwidth=2.0];
+    "Patrine" -- "Thiago";
+
+    // Estilo para destacar o caminho mais longo
+    edge [color=blue, penwidth=2.0, style=dashed];
+    "Helena" -- "Jefte";
+    "Jefte" -- "David";
+    "David" -- "Damaira";
+    "Damaira" -- "Sabrina";
+    "Sabrina" -- "Carlos";
+    "Carlos" -- "Jose";
+    "Jose" -- "Patrine";
+    "Patrine" -- "Luana";
+    "Luana" -- "Hyan";
+    "Hyan" -- "Otavio";
+    "Otavio" -- "Oresto";
+    "Oresto" -- "Samuel";
+    "Samuel" -- "Terto";
+    "Terto" -- "Thiago";
+    "Thiago" -- "Jonatan";
+}
+</code></pre>
+
+<h3>Imagem da Representação do Grafo</h3>
+<img src="graph.png" alt="Representação do Grafo">
