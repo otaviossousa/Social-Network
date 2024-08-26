@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define MAX_QUEUE_SIZE 100
+#define MAX_QUEUE_SIZE 20
 #define MAX_NAME_LENGTH 10
 
 /*
@@ -63,6 +63,7 @@ AdjacencyNode* createNode(User* user) {
     newNode->user = user;
     newNode->next = NULL;
     return newNode;
+
 }
 
 // Função para criar um grafo com um número fixo de usuários
@@ -332,10 +333,10 @@ void bfsFindShortestPath(Graph* graph, int startVertex, int finalVertex) {
 }
 
 /*
-4ª Etapa: Encontrar o Menor e o Maior Caminho entre Usuários
+4ª Etapa: Encontrar o Maior Caminho go grafo
 
 Descrição:
-- Implementação de funções que utilizam DFS (Busca em Profundidade) para encontrar o maior caminho possível  entre dois usuários sorteados aleatoriamente.
+- Implementação de funções que utilizam DFS (Busca em Profundidade) para encontrar o maior caminho possível  do grafo.
 - As funções fornecem a capacidade de explorar o grafo para encontrar caminhos e avaliar a conectividade entre usuários.
 
 Funções:
@@ -364,7 +365,7 @@ Funções:
 */
 
 // Função auxiliar para DFS que encontra o caminho mais longo
-void dfsFindLongestPath(struct Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* endVertex, int* bestPath) {
+void dfsFindLongestPath(Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* endVertex, int* bestPath) {
     visited[currentVertex] = 1;  // Marca o vértice atual como visitado
     currentPath[pathIndex] = currentVertex;  // Adiciona o vértice ao caminho atual
     pathIndex++;
@@ -399,7 +400,7 @@ void dfsFindLongestPath(struct Graph* graph, int currentVertex, int* visited, in
 }
 
 // Função para encontrar e imprimir o caminho mais longo usando DFS
-void findLongestPath(struct Graph* graph) {
+void findLongestPath(Graph* graph) {
     int* visited = malloc(graph->numUsers * sizeof(int));      // Array de visitados
     int* currentPath = malloc(graph->numUsers * sizeof(int));  // Array para o caminho atual
     int* bestPath = malloc(graph->numUsers * sizeof(int));     // Array para armazenar o melhor caminho
@@ -420,6 +421,81 @@ void findLongestPath(struct Graph* graph) {
 
     // Imprime o caminho mais longo encontrado, se existir
     if (endVertex != -1) {
+        printf("\nCaminho mais longo do grafo:\n");
+        for (int i = 0; i < maxPathLength; i++) {
+            printf("%s", graph->users[bestPath[i]]->nome);
+            if (i < maxPathLength - 1) {
+                printf(" -> ");
+            }
+        }
+        printf("\nDistancia: %d\n", maxPathLength - 1);
+    } else {
+        printf("\nNao ha caminhos no grafo.\n");
+    }
+
+    // Libera a memória alocada
+    free(visited);
+    free(currentPath);
+    free(bestPath);
+}
+
+/*
+5-etapa : Implementa DFS para descobrir o caminho mais longo entre dois pontos.
+
+(Correção das funcionalidades...)
+
+Descrição: as demais funcões da 4-etapa implementam a busca do maior caminho do grafo, uma vez que o requisito era:
+"Encontrar o caminho mais longo entre dois pontos". Diante disso foi necessario uma pequena modificação na função:
+´findLongestPath´, adicionando novos parametros para a a funcao modificada ´findLongestPath_2´, assim sendo possivel
+encontrar o maior caminho entre os dois pontos.
+
+*/
+
+void dfsFindLongestPath_2(Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* bestPath, int finalVertex) {
+    visited[currentVertex] = 1;  // Marca o vértice atual como visitado
+    currentPath[pathIndex] = currentVertex;  // Adiciona o vértice ao caminho atual
+    pathIndex++;
+
+    // Se o vértice final for alcançado, verifica se o caminho atual é o mais longo
+    if (currentVertex == finalVertex) {
+        if (pathIndex > *maxPathLength) {
+            *maxPathLength = pathIndex;
+            for (int i = 0; i < pathIndex; i++) {
+                bestPath[i] = currentPath[i];
+            }
+        }
+    } else {
+        // Explora todos os vértices adjacentes
+        AdjacencyNode* temp = graph->adjList[currentVertex];
+        while (temp != NULL) {
+            int adjVertex = temp->user->id;
+            if (!visited[adjVertex]) {
+                dfsFindLongestPath_2(graph, adjVertex, visited, currentPath, pathIndex, maxPathLength, bestPath, finalVertex);
+            }
+            temp = temp->next;
+        }
+    }
+
+    visited[currentVertex] = 0;  // Desmarca o vértice atual para futuras explorações
+    pathIndex--;
+}
+
+void findLongestPath_2(Graph* graph, int startVertex, int finalVertex) {
+    int* visited = malloc(graph->numUsers * sizeof(int));      // Array de visitados
+    int* currentPath = malloc(graph->numUsers * sizeof(int));  // Array para o caminho atual
+    int* bestPath = malloc(graph->numUsers * sizeof(int));     // Array para armazenar o melhor caminho
+    int maxPathLength = 0;                                     // Comprimento máximo do caminho encontrado
+
+    // Inicializa o array de visitados
+    for (int i = 0; i < graph->numUsers; i++) {
+        visited[i] = 0;
+    }
+
+    // Chama DFS para encontrar o caminho mais longo entre os dois vértices
+    dfsFindLongestPath_2(graph, startVertex, visited, currentPath, 0, &maxPathLength, bestPath, finalVertex);
+
+    // Imprime o caminho mais longo encontrado
+    if (maxPathLength > 0) {
         printf("\nCaminho mais longo :\n");
         for (int i = 0; i < maxPathLength; i++) {
             printf("%s", graph->users[bestPath[i]]->nome);
@@ -453,6 +529,8 @@ void findPathsBetweenUsers(Graph* graph) {
 
     // Calcula e imprime o menor caminho entre os usuários sorteados
     bfsFindShortestPath(graph, startVertex, finalVertex);
+
+    findLongestPath_2(graph, startVertex, finalVertex);
 
     // Calcula e imprime o maior caminho encontrado no grafo
     findLongestPath(graph);
