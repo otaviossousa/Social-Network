@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define MAX_QUEUE_SIZE 100
+#define MAX_QUEUE_SIZE 20
 #define MAX_NAME_LENGTH 10
 
 /*
@@ -333,10 +333,10 @@ void bfsFindShortestPath(Graph* graph, int startVertex, int finalVertex) {
 }
 
 /*
-4ª Etapa: Encontrar o Menor e o Maior Caminho entre Usuários
+4ª Etapa: Encontrar o Maior Caminho go grafo
 
 Descrição:
-- Implementação de funções que utilizam DFS (Busca em Profundidade) para encontrar o maior caminho possível  entre dois usuários sorteados aleatoriamente.
+- Implementação de funções que utilizam DFS (Busca em Profundidade) para encontrar o maior caminho possível  do grafo.
 - As funções fornecem a capacidade de explorar o grafo para encontrar caminhos e avaliar a conectividade entre usuários.
 
 Funções:
@@ -365,7 +365,7 @@ Funções:
 */
 
 // Função auxiliar para DFS que encontra o caminho mais longo
-void dfsFindLongestPath(struct Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* endVertex, int* bestPath) {
+void dfsFindLongestPath(Graph* graph, int currentVertex, int* visited, int* currentPath, int pathIndex, int* maxPathLength, int* endVertex, int* bestPath) {
     visited[currentVertex] = 1;  // Marca o vértice atual como visitado
     currentPath[pathIndex] = currentVertex;  // Adiciona o vértice ao caminho atual
     pathIndex++;
@@ -440,7 +440,9 @@ void findLongestPath(Graph* graph) {
 }
 
 /*
-5-etapa :correção das funcionalidades...
+5-etapa : Implementa DFS para descobrir o caminho mais longo entre dois pontos.
+
+(Correção das funcionalidades...)
 
 Descrição: as demais funcões da 4-etapa implementam a busca do maior caminho do grafo, uma vez que o requisito era:
 "Encontrar o caminho mais longo entre dois pontos". Diante disso foi necessario uma pequena modificação na função:
