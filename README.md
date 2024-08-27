@@ -153,6 +153,12 @@ digraph SocialNetwork {
 </code></pre>
 
 <h3>Imagem da Representação do Grafo</h3>
+<p>
+    <span style="color: black;">&#8594;</span> As setas pretas representam as arestas não direcionadas.<br>
+    <span style="color: blue;">&#8594;</span> As setas azuis representam o menor caminho entre dois pontos com BFS.<br>
+    <span style="color: green;">&#8594;</span> As setas verdes representam o maior caminho entre dois pontos com DFS.<br>
+    <span style="color: red;">&#8594;</span> As setas vermelhas representam o maior caminho percorrido do grafo.
+</p>
 <img src="graphviz_1.png" alt="Representação do Grafo">
 
 <h2>Resultado da 2ª Execução</h2>
