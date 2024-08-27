@@ -29,9 +29,16 @@
   </ul>
 </p>
 
+<h2>GraphvizOnline</h2>
+
 <p>
-  O resultado da execução do algoritmo foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Abaixo está o trecho de código DOT que representa a saída gerada.
+  O resultado da execução do algoritmo foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Logo abaixo temos os códigos em DOT que representam a saída gerada de cada exemplo.
 </p>
+
+<p>
+  Você pode consultar o repositório do criador do GraphvizOnline em <a href="https://github.com/dreampuf/GraphvizOnline" target="_blank">https://github.com/dreampuf/GraphvizOnline</a> e checar a documentação de como criar o grafo em <a href="https://www.graphviz.org/" target="_blank">https://www.graphviz.org/</a>.
+</p>
+
 
 <h2>Resultado da 1ª Execução</h2>
 <h3>Imagem da Saída no Console</h3>
