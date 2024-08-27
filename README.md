@@ -32,7 +32,8 @@
 <h2>GraphvizOnline</h2>
 
 <p>
-  O resultado da execução do algoritmo foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. Logo abaixo temos os códigos em DOT que representam a saída gerada de cada exemplo.
+  O resultado da execução do algoritmo foi visualizado no site <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">GraphvizOnline</a>. 
+  Logo abaixo temos os códigos em DOT Language que representam a saída de cada execução.
 </p>
 
 <p>
@@ -44,7 +45,7 @@
 <h3>Imagem da Saída no Console</h3>
 <img src="saida_1.png" alt="Saída no Console">
 
-<h3>Código DOT</h3>
+<h3>Código em DOT Language</h3>
 <pre><code>
 digraph SocialNetwork {
   // Definindo os nós e suas conexões
@@ -165,7 +166,7 @@ digraph SocialNetwork {
 <h3>Imagem da Saída no Console</h3>
 <img src="saida_2.png" alt="Saída no Console">
 
-<h3>Código DOT</h3>
+<h3>Código em DOT Language</h3>
 <pre><code>
 digraph SocialNetwork {
  // Definindo os nós e suas conexões
@@ -279,7 +280,7 @@ digraph SocialNetwork {
 <h3>Imagem da Saída no Console</h3>
 <img src="saida_3.png" alt="Saída no Console">
 
-<h3>Código DOT</h3>
+<h3>Código em DOT Language</h3>
 <pre><code>
 digraph SocialNetwork {
  // Definindo os nós e suas conexões
